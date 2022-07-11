@@ -32,26 +32,27 @@ function App() {
     }
   }
 
-  function onDragLeaveHandler (e:any) {
-    e.target.style.boxShadow = 'none'
+  function onDragLeaveHandler (e:React.DragEvent<HTMLDivElement>) {
+    let {style} = e.target as HTMLDivElement
+    style.boxShadow = 'none'
   }
 
-  function dragStartHandler(e:any, board:any, user:any) {
-    console.log('drag start', user, board)
+  function dragStartHandler(e:React.DragEvent<HTMLDivElement>, board:BoardType, user:UserType) {
     setCurrentBoard(board)
     setCurrentUser(user)
 
   }
 
-  function dragEndHandler(e:any ) {
+  function dragEndHandler(e:React.DragEvent<HTMLDivElement> ) {
+    let {style} = e.target as HTMLDivElement
     e.preventDefault()
-    e.target.style.boxShadow = 'none'
+    style.boxShadow = 'none'
   }
 
 
-  function onDropHandler(e:any, board:any, user:any) {
+  function onDropHandler(e:React.DragEvent<HTMLDivElement>, board:BoardType, user:UserType) {
     e.preventDefault()
-
+    let {style} = e.target as HTMLDivElement
     if (currentUser) {
       const currentIndex = currentBoard?.users.indexOf(currentUser)
       currentBoard?.users.splice(currentIndex!, 1)
@@ -71,32 +72,32 @@ function App() {
       }))
     }
 
-    e.target.style.boxShadow = 'none'
+    style.boxShadow = 'none'
 
   }
 
   return (
     <>
-    <h1>React Test DnD</h1>
-    <div className="root">
-      {boards.map((currentBoard:any) =>
-        <div className={'category'} key={currentBoard.id}
-        ><h4>{currentBoard.name}</h4><div>
-          {currentBoard.users.map((user:any) => {
-              return <div className={'user'} key={user.id}
-                          draggable={true}
-                          onDragStart={(e) => dragStartHandler(e, currentBoard, user )}
-                          onDragEnd={(e) => dragEndHandler(e)}
-                          onDragOver={(e) => dragOverHandler(e)}
-                          onDrop={(e) => onDropHandler(e, currentBoard, user)}
-                          onDragLeave={(e) => onDragLeaveHandler(e)}
-              >{user.user}</div>
-            }
-          )}
-        </div>
-        </div>
-      )}
-    </div>
+      <h1>React Test DnD</h1>
+      <div className="root">
+        {boards.map((currentBoard:any) =>
+          <div className={'category'} key={currentBoard.id}
+          ><h4>{currentBoard.name}</h4><div>
+            {currentBoard.users.map((user:any) => {
+                return <div className={'user'} key={user.id}
+                            draggable={true}
+                            onDragStart={(e) => dragStartHandler(e, currentBoard, user )}
+                            onDragEnd={(e) => dragEndHandler(e)}
+                            onDragOver={(e) => dragOverHandler(e)}
+                            onDrop={(e) => onDropHandler(e, currentBoard, user)}
+                            onDragLeave={(e) => onDragLeaveHandler(e)}
+                >{user.user}</div>
+              }
+            )}
+          </div>
+          </div>
+        )}
+      </div>
     </>
   );
 }
